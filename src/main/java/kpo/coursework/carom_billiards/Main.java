@@ -55,10 +55,15 @@ public class Main extends Application{
 
     private void run(GraphicsContext gc){
         table.draw(gc);
-        balls[0].update(gc);
-        balls[1].update(gc);
-        for (Ball ball:
-             balls) {
+        for(Ball ball
+                : balls)
+            ball.update(gc);
+        resolveTableCollisions();
+    }
+
+    public static void resolveTableCollisions(){
+        for (Ball ball
+                : balls) {
             if (table.checkVerticalBordersCollision(ball))
                 ball.setVelocity(-ball.getVelocity().getX(), ball.getVelocity().getY());
             if (table.checkHorizontalBordersCollision(ball))

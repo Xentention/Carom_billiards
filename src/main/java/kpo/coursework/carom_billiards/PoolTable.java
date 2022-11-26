@@ -12,10 +12,10 @@ import javafx.scene.shape.Rectangle;
 public class PoolTable{
     final Color TABLE_COLOR = Color.SEAGREEN;
 
-    private final Point2D leftTopCorner;
+    final Point2D leftTopCorner;
     final int TABLE_WIDTH = 1000;
     final int TABLE_HEIGHT = 500;
-    static final double TABLE_FRICTION = 1;
+    static final double TABLE_FRICTION = 0.9;
     Rectangle tableRect;
 
     public PoolTable(int leftTopX,

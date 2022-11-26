@@ -31,8 +31,8 @@ public class Ball {
     }
 
     public void move() {
-        Point2D destinaton = position.add(velocity);
-        int distance = (int) position.distance(destinaton);
+        Point2D destination = position.add(velocity);
+        int distance = (int) position.distance(destination);
 
         while (distance > 0){
             // идем по 2 пикселя, чтобы сэкономить время
@@ -49,8 +49,8 @@ public class Ball {
                 if(this == otherBall) continue;
                 if(this.checkBallCollisions(otherBall)) {
                     setUpCollision(this, otherBall);
-                    destinaton = position.add(velocity);
-                    distance = (int) position.distance(destinaton);
+                    destination = position.add(velocity);
+                    distance = (int) position.distance(destination);
                 }
 
             }

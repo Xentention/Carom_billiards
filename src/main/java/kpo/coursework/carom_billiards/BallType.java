@@ -2,6 +2,9 @@ package kpo.coursework.carom_billiards;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Типы (цвета) шаров. Белый помечен как CUEBALL
+ */
 public enum BallType{
     CUEBALL,
     YELLOW,

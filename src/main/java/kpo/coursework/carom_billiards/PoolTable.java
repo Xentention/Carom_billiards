@@ -27,17 +27,29 @@ public class PoolTable{
     public void draw(GraphicsContext gc){
         gc.setFill(TABLE_COLOR);
         gc.fillRect(leftTopCorner.getX(), leftTopCorner.getY(),
-                leftTopCorner.getX() + TABLE_WIDTH, leftTopCorner.getY() + TABLE_HEIGHT);
+                TABLE_WIDTH, TABLE_HEIGHT);
     }
 
+    /**
+     * Проверяет, столкнулся ли шар с "вертикальными"
+     * границами стола
+     * @param ball  проверяемый шар
+     * @return  true, если столкнулся
+     */
     public boolean checkVerticalBordersCollision(Ball ball){
-        return (!(ball.getPosition().getX() + 2 * ball.RADIUS < leftTopCorner.getX() + TABLE_WIDTH)) ||
-                (!(ball.getPosition().getX() > leftTopCorner.getX()));
+        return (!(ball.getCenter().getX() + ball.RADIUS < leftTopCorner.getX() + TABLE_WIDTH)) ||
+                (!(ball.getCenter().getX() - ball.RADIUS > leftTopCorner.getX()));
     }
 
+    /**
+     * Проверяет, столкнулся ли шар с "горизонтальными"
+     * границами стола
+     * @param ball  проверяемый шар
+     * @return  true, если столкнулся
+     */
     public boolean checkHorizontalBordersCollision(Ball ball){
-        return (!(ball.getPosition().getY() + 2 * ball.RADIUS < leftTopCorner.getY() + TABLE_HEIGHT)) ||
-                (!(ball.getPosition().getY() > leftTopCorner.getY()));
+        return (!(ball.getCenter().getY() + ball.RADIUS < leftTopCorner.getY() + TABLE_HEIGHT)) ||
+                (!(ball.getCenter().getY() - ball.RADIUS > leftTopCorner.getY()));
     }
 
 }

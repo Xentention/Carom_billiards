@@ -17,41 +17,30 @@ import javafx.util.Duration;
 import java.io.IOException;
 
 public class Main extends Application{
-    static final int WIDTH = 1000;
-    static final int HEIGHT = 500;
-    private static Pane root = new Pane();
-    //private static Scene scene = new Scene(root, WIDTH, HEIGHT);
-    private static boolean game = true;
+    static final int WIDTH = 1050;
+    static final int HEIGHT = 550;
 
-    static PoolTable table = new PoolTable(0, 0);
-    static Ball[] balls = new Ball[2];
+    static PoolTable table;
+    static Ball[] balls = new Ball[3];
 
     boolean gameOver = false;
-    public static GraphicsContext gc ;
+    static GraphicsContext gc ;
+
+
+    public static void main(String[] args) {
+        launch();
+    }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        /*FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), width, height);
-        stage.setTitle("Carom billiards");
-        stage.setScene(scene);
-        stage.show();
-        PoolTable p = new PoolTable();
-        p.drawTable();*/
+    public void start(Stage stage) {
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         gc = canvas.getGraphicsContext2D();
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(100), e ->run(gc)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(50), e ->run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
-        balls[0] = new Ball(30, 15, BallType.RED);
-        balls[1] = new Ball(100, 90, BallType.YELLOW);
         stage.setTitle("Carom billiard");
         stage.setScene(new Scene(new StackPane(canvas)));
         stage.show();
-        table.draw(gc);
-        balls[0].draw(gc);
-        balls[1].draw(gc);
-        balls[0].setVelocity(20, 20);
-        balls[1].setVelocity(0, 0);
+        setUpGameEntities();
         tl.play();
     }
 
@@ -62,11 +51,38 @@ public class Main extends Application{
             ball.update(gc);
     }
 
+    private void setUpGameEntities(){
+        constructTable();
+        constructBalls();
 
+    }
 
+    /**
+     * Задает начальное состояние стола, на котором
+     * проходит игра
+     */
+    private void constructTable(){
+        gc.setFill(Color.MAROON);
+        gc.fillRect(0, 0, WIDTH, HEIGHT);
+        table  = new PoolTable(25, 25);
+    }
 
+    /**
+     * Задает начальное состояние всех бильярдных шаров
+     */
+    private void constructBalls(){
+        // стандартные стартовые позиции для карамболя
+        Point2D cueBallPos = new Point2D(table.leftTopCorner.getX() + table.TABLE_WIDTH / 4,
+                                        table.leftTopCorner.getY() + 5 * table.TABLE_HEIGHT / 8);
+        Point2D yellowBallPos = new Point2D(table.leftTopCorner.getX() + table.TABLE_WIDTH / 4,
+                                          table.leftTopCorner.getY() + table.TABLE_HEIGHT / 2);
+        Point2D redBallPos = new Point2D(table.leftTopCorner.getX() + 3 * table.TABLE_WIDTH / 4,
+                                        table.leftTopCorner.getY() + table.TABLE_HEIGHT / 2);
 
-    public static void main(String[] args) {
-        launch();
+        balls[0] = new Ball(cueBallPos, BallType.CUEBALL);
+        balls[1] = new Ball(yellowBallPos, BallType.YELLOW);
+        balls[2] = new Ball(redBallPos, BallType.RED);
+
+        balls[1].setVelocity(100, -30);
     }
 }

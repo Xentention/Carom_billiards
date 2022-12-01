@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 import static kpo.coursework.carom_billiards.Main.balls;
 import static kpo.coursework.carom_billiards.Main.table;
 
@@ -21,7 +22,7 @@ public class Ball {
     }
 
     public void update(GraphicsContext gc){
-        move(gc);
+        move();
         draw(gc);
     }
 
@@ -34,9 +35,9 @@ public class Ball {
      * Логика движения бильярдного шара
      * (не перерисовывает сам шар)
      */
-    public void move(GraphicsContext gc) {
+    public void move() {
         Point2D destination = position.add(velocity);
-        int distance = (int) position.distance(destination);
+        double distance = position.distance(destination);
 
         while (distance > 0) {
             double stepX = velocity.getX() == 0 ?
@@ -46,23 +47,31 @@ public class Ball {
                     0:
                     velocity.getY()/abs(velocity.getY());
 
+            if(abs(stepX) > 0.1 && abs(stepY) > 0.1) {
+                if(velocity.getX() > velocity.getY())
+                    stepX *= velocity.getX() / abs(velocity.getY());
+                else
+                    stepY *= velocity.getY() / abs(velocity.getX());
+            }
+
             position = position.add(stepX, stepY);
-            --distance;
+            distance -= Math.sqrt(stepX * stepX + stepY * stepY);
 
 
             // на каждом шаге необходимо проверять не столкнулись ли
             // мы с препятствиями
             if(resolveTableCollisions()){
                 destination = position.add(velocity);
-                distance = (int) position.distance(destination);
+                distance = position.distance(destination);
 
             }
 
             for (Ball otherBall:
                     balls) {
+                if(this == otherBall) continue;
                 if(resolveBallsCollision(otherBall)) {
                     destination = position.add(velocity);
-                    distance = (int) position.distance(destination);
+                    distance = position.distance(destination);
                 }
 
             }
@@ -89,6 +98,8 @@ public class Ball {
             this.setVelocity(this.getVelocity().getX(), -this.getVelocity().getY());
             collision = true;
         }
+
+
         return  collision;
     }
 
@@ -136,6 +147,10 @@ public class Ball {
 
     public Point2D getCenter(){
         return new Point2D(position.getX()+RADIUS, position.getY()+RADIUS);
+    }
+
+    public Point2D getPosition(){
+        return position;
     }
 
     public void setVelocity(double velX, double velY){

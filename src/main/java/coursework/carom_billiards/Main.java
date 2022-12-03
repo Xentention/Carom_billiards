@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -40,6 +41,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         stage.setTitle("Carom billiard");
+        stage.getIcons().add(new Image(Objects.requireNonNull(this.getClass()
+                                            .getResourceAsStream("/coursework/carom_billiards/images/icon.png"))));
+
         scene.getStylesheets().add(Objects.requireNonNull(this.getClass()
                               .getResource("/coursework/carom_billiards/CSS/startFormatting.css"))
                               .toExternalForm());

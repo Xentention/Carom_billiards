@@ -1,0 +1,14 @@
+.button {
+      -fx-text-fill: white;
+      -fx-font-weight: bold;
+      -fx-background-color: #8B0000;
+      -fx-pref-width: 100px;
+      -fx-pref-height: 50px;
+}
+
+#start-pane{
+      -fx-background-image: url("../images/startImage.jpeg");
+      -fx-background-repeat: no-repeat;
+      -fx-background-size: 1050 550;
+      -fx-background-position: center center;
+}

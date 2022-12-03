@@ -57,6 +57,10 @@ public class Ball {
             // на каждом шаге необходимо проверять не столкнулись ли
             //мы с препятствиями
             if(resolveTableCollisions()){
+                // для подсчета очков
+                if(this.ballType == BallType.CUEBALL)
+                    OneCushionScore.onCollision("border");
+
                 destination = position.add(velocity);
                 distance = position.distance(destination);
 
@@ -66,6 +70,13 @@ public class Ball {
                     Main.balls) {
                 if(otherBall == this) continue;
                 if(resolveBallsCollision(otherBall)) {
+                    // для подсчета очков
+                    if(this.ballType == BallType.CUEBALL)
+                        if(otherBall.ballType == BallType.RED)
+                            OneCushionScore.onCollision("red");
+                        else
+                            OneCushionScore.onCollision("yellow");
+
                     destination = position.add(velocity);
                     distance = position.distance(destination);
                 }

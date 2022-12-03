@@ -13,8 +13,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Objects;
+
 public class Main extends Application {
-    private boolean gameIsOn = false;
+    private boolean gameIsOn = false;           // идет ли игра
+
+    private boolean moveIsFinishing = false;    // заканчивается ли ход
 
     static final int WIDTH = 1050;
     static final int HEIGHT = 550;
@@ -36,41 +40,46 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         stage.setTitle("Carom billiard");
-        scene.getStylesheets().add(this.getClass()
-                                        .getResource("/coursework/carom_billiards/CSS/startFormatting.css")
-                                        .toExternalForm());
-        Button startGame = new Button("Start");
-        startGame.getStyleClass().add("button");
-        pane.getChildren().addAll(startGame);
+        scene.getStylesheets().add(Objects.requireNonNull(this.getClass()
+                              .getResource("/coursework/carom_billiards/CSS/startFormatting.css"))
+                              .toExternalForm());
+        Button startGameBtn = new Button("Start");
+        startGameBtn.getStyleClass().add("button");
+        pane.getChildren().addAll(startGameBtn);
         pane.setId("start-pane");
         stage.setScene(scene);
 
-        startGame.setOnAction(event -> {
-            startGame(stage);
-            pane.getChildren().removeAll(startGame);
+        startGameBtn.setOnAction(event -> {
+            startGame();
+            pane.getChildren().removeAll(startGameBtn);
         });
 
         stage.show();
     }
 
-    public void startGame(Stage stage){
-        stage.show();
+    public void startGame(){
         gc = canvas.getGraphicsContext2D();
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(50), e ->run(gc)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(50), e ->run()));
         tl.setCycleCount(Timeline.INDEFINITE);
-        stage.setScene(scene);
         setUpGameEntities();
 
         tl.play();
     }
 
 
-    private void run(GraphicsContext gc){
-        gameIsOn = true;
+    private void run(){
+        gameIsOn = true;        // игра началась
         table.draw(gc);
         for(Ball ball
                 : balls)
             ball.update(gc);
+        if(areBallsInMotion())
+            moveIsFinishing = true;
+        else
+            if(moveIsFinishing) {
+                moveIsFinishing = false;
+                OneCushionScore.playResultSound();
+            }
     }
 
     private void setUpGameEntities(){
@@ -117,6 +126,7 @@ public class Main extends Application {
 
         scene.setOnMouseClicked(event -> {
             if (gameIsOn && !areBallsInMotion()) {
+                moveIsFinishing = false;
                 double newStepX = (event.getX() - balls[0].getCenter().getX()) / 2;
                 double newStepY = (event.getY() - balls[0].getCenter().getY()) / 2;
                 balls[0].setVelocity(newStepX, newStepY);

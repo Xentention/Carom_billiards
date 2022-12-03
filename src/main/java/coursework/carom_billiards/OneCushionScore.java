@@ -37,14 +37,14 @@ public class OneCushionScore {
         boolean hitRedBall = false;
         while(!collisions.isEmpty()){
             String collision = collisions.removeFirst();
-            if(collision.equals("red"))
-                hitRedBall = true;
-            if(collision.equals("yellow"))
-                hitYellowBall = true;
-            if(collision.equals("border")){
-                if(hitRedBall || hitYellowBall)
+            if(collision.equals("border"))
                     hitAWall = true;
-            }
+            if(collision.equals("red")
+                    && (hitAWall || hitYellowBall))
+                hitRedBall = true;
+            if(collision.equals("yellow")
+                    && (hitAWall || hitRedBall))
+                hitYellowBall = true;
         }
         return hitAWall && hitRedBall && hitYellowBall;
     }

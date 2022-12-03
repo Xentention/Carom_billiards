@@ -116,6 +116,9 @@ public class Main extends Application {
         //balls[1].setVelocity(100, -30);
     }
 
+    /**
+     * Задает параметры битка
+     */
     private void constructCueBall(){
 
         Point2D cueBallPos = new Point2D(table.leftTopCorner.getX() + table.TABLE_WIDTH / 4,
@@ -135,6 +138,10 @@ public class Main extends Application {
 
     }
 
+    /**
+     * Проверяет, в движении ли шары
+     * @return да/нет
+     */
     private boolean areBallsInMotion(){
         for(Ball ball : balls){
             if(ball.getVelocity().magnitude() != 0)

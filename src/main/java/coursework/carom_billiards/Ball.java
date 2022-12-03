@@ -1,12 +1,9 @@
-package kpo.coursework.carom_billiards;
+package coursework.carom_billiards;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
-import static kpo.coursework.carom_billiards.Main.balls;
-import static kpo.coursework.carom_billiards.Main.table;
 
 public class Ball {
     final int RADIUS = 12;
@@ -31,6 +28,7 @@ public class Ball {
         gc.fillOval(position.getX(), position.getY(), 2*RADIUS, 2*RADIUS);
     }
 
+
     /**
      * Логика движения бильярдного шара
      * (не перерисовывает сам шар)
@@ -47,19 +45,17 @@ public class Ball {
                     0:
                     velocity.getY()/abs(velocity.getY());
 
-            if(abs(stepX) > 0.1 && abs(stepY) > 0.1) {
-                if(velocity.getX() > velocity.getY())
-                    stepX *= velocity.getX() / abs(velocity.getY());
-                else
-                    stepY *= velocity.getY() / abs(velocity.getX());
+            // опирается на уравнение прямой на плоскости
+            if(stepX != 0 && stepY != 0) {
+                stepY = (stepX * velocity.getY()) / velocity.getX();
             }
 
+            distance -= position.distance(position.add(stepX, stepY));
             position = position.add(stepX, stepY);
-            distance -= Math.sqrt(stepX * stepX + stepY * stepY);
 
 
             // на каждом шаге необходимо проверять не столкнулись ли
-            // мы с препятствиями
+            //мы с препятствиями
             if(resolveTableCollisions()){
                 destination = position.add(velocity);
                 distance = position.distance(destination);
@@ -67,15 +63,14 @@ public class Ball {
             }
 
             for (Ball otherBall:
-                    balls) {
-                if(this == otherBall) continue;
+                    Main.balls) {
+                if(otherBall == this) continue;
                 if(resolveBallsCollision(otherBall)) {
                     destination = position.add(velocity);
                     distance = position.distance(destination);
                 }
 
             }
-
         }
         // трение
         velocity = velocity.multiply(PoolTable.TABLE_FRICTION);
@@ -90,15 +85,28 @@ public class Ball {
      */
     public boolean resolveTableCollisions(){
         boolean collision = false;
-        if (table.checkVerticalBordersCollision(this)) {
+
+        if (Main.table.checkVerticalBordersCollision(this)) {
             this.setVelocity(-this.getVelocity().getX(), this.getVelocity().getY());
-            collision = true;
-        }
-        if (table.checkHorizontalBordersCollision(this)) {
-            this.setVelocity(this.getVelocity().getX(), -this.getVelocity().getY());
+            //Если шар немного зашел за границы поля, его надо оттуда вывести
+            if(position.getX() > Main.table.TABLE_WIDTH / 2)
+                setPosition((Main.table.leftTopCorner.getX() + Main.table.TABLE_WIDTH) - 2 * RADIUS - 1,
+                        position.getY());
+            else
+                setPosition(Main.table.leftTopCorner.getX() + 1, position.getY());
             collision = true;
         }
 
+        if (Main.table.checkHorizontalBordersCollision(this)) {
+            this.setVelocity(this.getVelocity().getX(), -this.getVelocity().getY());
+            //Если шар немного зашел за границы поля, его надо оттуда вывести
+            if(position.getY() > Main.table.TABLE_HEIGHT / 2)
+                setPosition(position.getX(),
+                        ((Main.table.leftTopCorner.getY() + Main.table.TABLE_HEIGHT) - 2 * RADIUS - 1));
+            else
+                setPosition(position.getX(), Main.table.leftTopCorner.getY() + 1);
+            collision = true;
+        }
 
         return  collision;
     }
@@ -149,14 +157,18 @@ public class Ball {
         return new Point2D(position.getX()+RADIUS, position.getY()+RADIUS);
     }
 
-    public Point2D getPosition(){
-        return position;
+    public void setPosition(double posX,
+                            double posY) {
+        position = position.subtract(position);
+        position = position.add(posX, posY);
     }
 
-    public void setVelocity(double velX, double velY){
+    public void setVelocity(double velX,
+                            double velY){
         velocity = velocity.subtract(velocity);
         velocity = velocity.add(velX, velY);
     }
+
 
     public Point2D getVelocity(){
         return velocity;

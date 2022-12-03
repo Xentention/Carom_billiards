@@ -1,20 +1,16 @@
-package kpo.coursework.carom_billiards;
+package coursework.carom_billiards;
 
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class PoolTable{
     final Color TABLE_COLOR = Color.SEAGREEN;
 
     final Point2D leftTopCorner;
-    final int TABLE_WIDTH = 1000;
-    final int TABLE_HEIGHT = 500;
+    final double TABLE_WIDTH = 1000;
+    final double TABLE_HEIGHT = 500;
     static final double TABLE_FRICTION = 0.9;
     Rectangle tableRect;
 

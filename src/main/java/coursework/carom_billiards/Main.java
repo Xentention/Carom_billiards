@@ -1,32 +1,27 @@
-package kpo.coursework.carom_billiards;
+package coursework.carom_billiards;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Button;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import kpo.coursework.controllers.CueBall;
 
-import java.io.IOException;
+public class Main extends Application {
+    private boolean gameIsOn = false;
 
-public class Main extends Application{
     static final int WIDTH = 1050;
     static final int HEIGHT = 550;
 
     static PoolTable table;
     static Ball[] balls = new Ball[3];
 
-    boolean gameOver = false;
     static GraphicsContext gc;
     static private final Canvas canvas = new Canvas(WIDTH, HEIGHT);
     static private final Pane pane = new StackPane(canvas);
@@ -40,28 +35,38 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) {
+        stage.setTitle("Carom billiard");
+        scene.getStylesheets().add(this.getClass()
+                                        .getResource("/coursework/carom_billiards/CSS/startFormatting.css")
+                                        .toExternalForm());
+        Button startGame = new Button("Start");
+        startGame.getStyleClass().add("button");
+        pane.getChildren().addAll(startGame);
+        pane.setId("start-pane");
+        stage.setScene(scene);
+
+        startGame.setOnAction(event -> {
+            startGame(stage);
+            pane.getChildren().removeAll(startGame);
+        });
+
+        stage.show();
+    }
+
+    public void startGame(Stage stage){
+        stage.show();
         gc = canvas.getGraphicsContext2D();
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(50), e ->run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
-        stage.setTitle("Carom billiard");
         stage.setScene(scene);
-        stage.show();
         setUpGameEntities();
-        scene.setOnMouseClicked(event -> {
-            if (balls[0].getVelocity().getX() == 0 &&
-                    balls[0].getVelocity().getY() == 0) {
-                double newStepX = (event.getX() - balls[0].getCenter().getX()) / 10;
-                double newStepY = (event.getY() - balls[0].getCenter().getY()) / 10;
-                balls[0].setVelocity(newStepX, newStepY);
-            }
-        });
-
 
         tl.play();
     }
 
 
     private void run(GraphicsContext gc){
+        gameIsOn = true;
         table.draw(gc);
         for(Ball ball
                 : balls)
@@ -110,7 +115,22 @@ public class Main extends Application{
         balls[0] = new Ball(cueBallPos, BallType.CUEBALL);
 
 
+        scene.setOnMouseClicked(event -> {
+            if (gameIsOn && !areBallsInMotion()) {
+                double newStepX = (event.getX() - balls[0].getCenter().getX()) / 2;
+                double newStepY = (event.getY() - balls[0].getCenter().getY()) / 2;
+                balls[0].setVelocity(newStepX, newStepY);
+            }
+        });
 
+    }
+
+    private boolean areBallsInMotion(){
+        for(Ball ball : balls){
+            if(ball.getVelocity().magnitude() != 0)
+                return true;
+        }
+        return false;
     }
 
 }

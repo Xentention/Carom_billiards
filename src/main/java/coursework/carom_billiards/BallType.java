@@ -1,4 +1,4 @@
-package kpo.coursework.carom_billiards;
+package coursework.carom_billiards;
 
 import javafx.scene.paint.Color;
 

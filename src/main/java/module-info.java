@@ -1,4 +1,4 @@
-module com.example.carom_billiards {
+module coursework.carom_billiards {
     requires javafx.controls;
     requires javafx.fxml;
 

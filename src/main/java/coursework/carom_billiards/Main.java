@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Main extends Application {
     private boolean gameIsOn = false;           // идет ли игра
 
-    private boolean moveIsFinishing = false;    // заканчивается ли ход
+    private boolean moveInProgress = false;    // заканчивается ли ход
 
     public static final int WIDTH = 1050;
     public static final int HEIGHT = 550;
@@ -77,13 +77,10 @@ public class Main extends Application {
         for(Ball ball
                 : balls)
             ball.update(gc);
-        if(areBallsInMotion())
-            moveIsFinishing = true;
-        else
-            if(moveIsFinishing) {
-                moveIsFinishing = false;
-                OneCushionScore.playResultSound();
-            }
+        if(moveInProgress && !areBallsInMotion()) {
+            moveInProgress = false;
+            OneCushionScore.playResultSound();
+        }
     }
 
     private void setUpGameEntities(){
@@ -133,7 +130,7 @@ public class Main extends Application {
 
         scene.setOnMouseClicked(event -> {
             if (gameIsOn && !areBallsInMotion()) {
-                moveIsFinishing = false;
+                moveInProgress = true;
                 double newStepX = (event.getX() - balls[0].getCenter().getX()) / 2;
                 double newStepY = (event.getY() - balls[0].getCenter().getY()) / 2;
                 balls[0].setVelocity(newStepX, newStepY);

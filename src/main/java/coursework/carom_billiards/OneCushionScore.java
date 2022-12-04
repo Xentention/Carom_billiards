@@ -7,8 +7,12 @@ import javafx.scene.media.MediaPlayer;
 
 public class OneCushionScore {
     private static final ArrayDeque<String> collisions = new ArrayDeque<>(); // дек очередности ударенных элементов
+    public static final String borderHit = "border";
+    public static final String redBallHit = "red";
+    public static final String yellowBallHit = "yellow";
 
-    public static void onCollision(String type){
+
+    public static void addCollision(String type){
         collisions.addLast(type);
     }
 
@@ -37,12 +41,12 @@ public class OneCushionScore {
         boolean hitRedBall = false;
         while(!collisions.isEmpty()){
             String collision = collisions.removeFirst();
-            if(collision.equals("border"))
+            if(collision.equals(borderHit))
                     hitAWall = true;
-            if(collision.equals("red")
+            if(collision.equals(redBallHit)
                     && (hitAWall || hitYellowBall))
                 hitRedBall = true;
-            if(collision.equals("yellow")
+            if(collision.equals(yellowBallHit)
                     && (hitAWall || hitRedBall))
                 hitYellowBall = true;
         }

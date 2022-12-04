@@ -21,16 +21,16 @@ public class Main extends Application {
 
     private boolean moveIsFinishing = false;    // заканчивается ли ход
 
-    static final int WIDTH = 1050;
-    static final int HEIGHT = 550;
+    public static final int WIDTH = 1050;
+    public static final int HEIGHT = 550;
 
-    static PoolTable table;
-    static Ball[] balls = new Ball[3];
+    public static PoolTable table;
+    public static Ball[] balls = new Ball[3];
 
     static GraphicsContext gc;
-    static private final Canvas canvas = new Canvas(WIDTH, HEIGHT);
-    static private final Pane pane = new StackPane(canvas);
-    static private final Scene scene = new Scene(pane);
+    private static final Canvas canvas = new Canvas(WIDTH, HEIGHT);
+    private static final Pane pane = new StackPane(canvas);
+    private static final Scene scene = new Scene(pane);
 
 
 

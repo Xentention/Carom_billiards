@@ -85,8 +85,8 @@ public class Ball {
         }
         // трение
         velocity = velocity.multiply(PoolTable.TABLE_FRICTION);
-        if(abs(velocity.getX()) < 0.1) setVelocity(0, velocity.getY());
-        if(abs(velocity.getY()) < 0.1) setVelocity(velocity.getX(), 0);
+        if(abs(velocity.getX()) < 0.9) setVelocity(0, velocity.getY());
+        if(abs(velocity.getY()) < 0.9) setVelocity(velocity.getX(), 0);
     }
 
     /**

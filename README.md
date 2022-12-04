@@ -30,6 +30,3 @@
 
 Игра:
 ![Игра стартовое положение](https://user-images.githubusercontent.com/96055384/205442763-3365a331-1233-405d-b5ca-52d21c753d2f.png)
-
-
-

@@ -131,9 +131,9 @@ public class Main extends Application {
         scene.setOnMouseClicked(event -> {
             if (gameIsOn && !areBallsInMotion()) {
                 moveInProgress = true;
-                double newStepX = (event.getX() - balls[0].getCenter().getX()) / 2;
-                double newStepY = (event.getY() - balls[0].getCenter().getY()) / 2;
-                balls[0].setVelocity(newStepX, newStepY);
+                double newVelocityX = (event.getX() - balls[0].getCenter().getX()) / 2;
+                double newVelocityY = (event.getY() - balls[0].getCenter().getY()) / 2;
+                balls[0].setVelocity(newVelocityX, newVelocityY);
             }
         });
 

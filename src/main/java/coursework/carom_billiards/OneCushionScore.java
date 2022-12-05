@@ -37,6 +37,8 @@ public class OneCushionScore {
      */
     private static boolean gotAScore(){
         boolean hitAWall = false;
+
+        int numberSuccessBall = 0;
         boolean hitYellowBall = false;
         boolean hitRedBall = false;
         while(!collisions.isEmpty()){
@@ -44,12 +46,16 @@ public class OneCushionScore {
             if(collision.equals(borderHit))
                     hitAWall = true;
             if(collision.equals(redBallHit)
-                    && (hitAWall || hitYellowBall))
+                    && (numberSuccessBall == 0 || (hitAWall && hitYellowBall))) {
                 hitRedBall = true;
+                ++numberSuccessBall;
+            }
             if(collision.equals(yellowBallHit)
-                    && (hitAWall || hitRedBall))
+                    && (numberSuccessBall == 0 || (hitAWall && hitRedBall))) {
                 hitYellowBall = true;
+                ++numberSuccessBall;
+            }
         }
-        return hitAWall && hitRedBall && hitYellowBall;
+        return hitAWall && (numberSuccessBall >=2 );
     }
 }

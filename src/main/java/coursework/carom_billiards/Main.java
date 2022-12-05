@@ -27,6 +27,8 @@ public class Main extends Application {
     public static PoolTable table;
     public static Ball[] balls = new Ball[3];
 
+    private static double[] lastDirection = new double[2];
+
     static GraphicsContext gc;
     private static final Canvas canvas = new Canvas(WIDTH, HEIGHT);
     private static final Pane pane = new StackPane(canvas);
@@ -77,9 +79,16 @@ public class Main extends Application {
         for(Ball ball
                 : balls)
             ball.update(gc);
-        if(moveInProgress && !areBallsInMotion()) {
-            moveInProgress = false;
-            OneCushionScore.playResultSound();
+
+        if(moveInProgress) {
+
+            gc.setFill(Color.BLACK);
+            gc.fillOval(lastDirection[0] - 2, lastDirection[1] - 2, 4, 4);
+
+            if (!areBallsInMotion()) {
+                moveInProgress = false;
+                OneCushionScore.playResultSound();
+            }
         }
     }
 
@@ -131,6 +140,8 @@ public class Main extends Application {
         scene.setOnMouseClicked(event -> {
             if (gameIsOn && !areBallsInMotion()) {
                 moveInProgress = true;
+                lastDirection[0] = event.getX();
+                lastDirection[1] = event.getY();
                 double newVelocityX = (event.getX() - balls[0].getCenter().getX()) / 2;
                 double newVelocityY = (event.getY() - balls[0].getCenter().getY()) / 2;
                 balls[0].setVelocity(newVelocityX, newVelocityY);

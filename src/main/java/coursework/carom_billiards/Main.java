@@ -49,8 +49,9 @@ public class Main extends Application {
         scene.getStylesheets().add(Objects.requireNonNull(this.getClass()
                               .getResource("/coursework/carom_billiards/CSS/startFormatting.css"))
                               .toExternalForm());
+
         Button startGameBtn = new Button("Start");
-        startGameBtn.getStyleClass().add("button");
+        startGameBtn.setId("start-button");
         pane.getChildren().addAll(startGameBtn);
         pane.setId("start-pane");
         stage.setScene(scene);
@@ -68,6 +69,7 @@ public class Main extends Application {
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(50), e ->run()));
         tl.setCycleCount(Timeline.INDEFINITE);
         setUpGameEntities();
+        setKeyEvents();
 
         tl.play();
     }
@@ -76,12 +78,10 @@ public class Main extends Application {
     private void run(){
         gameIsOn = true;        // игра началась
         table.draw(gc);
-        for(Ball ball
-                : balls)
+        for(Ball ball : balls)
             ball.update(gc);
 
         if(moveInProgress) {
-
             gc.setFill(Color.BLACK);
             gc.fillOval(lastDirection[0] - 2, lastDirection[1] - 2, 4, 4);
 
@@ -96,6 +96,26 @@ public class Main extends Application {
         constructTable();
         constructBalls();
 
+    }
+
+    /**
+     * Обработка нажатий клавиш клавиатуры
+     */
+    private void setKeyEvents(){
+        scene.setOnKeyPressed(event -> {
+            if (!areBallsInMotion())
+                switch (event.getCode()) {
+                    case W -> {
+                        // Победа из стартового положения
+                        gameIsOn = false;
+                        setUpGameEntities();
+                        gameIsOn = true;
+                        startMove(972, 220);
+                    }
+                    //рестарт
+                    case R -> setUpGameEntities();
+                }
+        });
     }
 
     /**
@@ -122,8 +142,6 @@ public class Main extends Application {
         balls[1] = new Ball(yellowBallPos, BallType.YELLOW);
         balls[2] = new Ball(redBallPos, BallType.RED);
 
-        // delete in the future
-        //balls[1].setVelocity(100, -30);
     }
 
     /**
@@ -139,12 +157,7 @@ public class Main extends Application {
 
         scene.setOnMouseClicked(event -> {
             if (gameIsOn && !areBallsInMotion()) {
-                moveInProgress = true;
-                lastDirection[0] = event.getX();
-                lastDirection[1] = event.getY();
-                double newVelocityX = (event.getX() - balls[0].getCenter().getX()) / 2;
-                double newVelocityY = (event.getY() - balls[0].getCenter().getY()) / 2;
-                balls[0].setVelocity(newVelocityX, newVelocityY);
+                startMove(event.getX(), event.getY());
             }
         });
 
@@ -161,5 +174,21 @@ public class Main extends Application {
         }
         return false;
     }
+
+    /**
+     * Толкает биток в сторону полученных координат
+     * @param toX координата Х
+     * @param toY координата Y
+     */
+    private void startMove(double toX,
+                           double toY){
+        moveInProgress = true;
+        lastDirection[0] = toX;
+        lastDirection[1] = toY;
+        double newVelocityX = (toX - balls[0].getCenter().getX()) / 2;
+        double newVelocityY = (toY - balls[0].getCenter().getY()) / 2;
+        balls[0].setVelocity(newVelocityX, newVelocityY);
+    }
+
 
 }

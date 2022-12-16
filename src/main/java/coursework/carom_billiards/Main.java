@@ -105,8 +105,8 @@ public class Main extends Application {
         scene.setOnKeyPressed(event -> {
             if (!areBallsInMotion())
                 switch (event.getCode()) {
+                    // Победа из стартового положения
                     case W -> {
-                        // Победа из стартового положения
                         gameIsOn = false;
                         setUpGameEntities();
                         gameIsOn = true;

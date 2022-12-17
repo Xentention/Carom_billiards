@@ -40,6 +40,13 @@ public class Main extends Application {
         launch();
     }
 
+    /**
+     * Входная точка приложения
+     * @param stage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     */
     @Override
     public void start(Stage stage) {
         stage.setTitle("Carom billiard");
@@ -64,6 +71,9 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * Начало игры
+     */
     public void startGame(){
         gc = canvas.getGraphicsContext2D();
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(50), e ->run()));
@@ -75,6 +85,9 @@ public class Main extends Application {
     }
 
 
+    /**
+     * Процесс игры
+     */
     private void run(){
         gameIsOn = true;        // игра началась
         table.draw(gc);

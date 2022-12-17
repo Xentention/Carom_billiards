@@ -170,6 +170,11 @@ public class Main extends Application {
 
         scene.setOnMouseClicked(event -> {
             if (gameIsOn && !areBallsInMotion()) {
+                //кликать вне зоны игрового стола запрещено
+                if(event.getX() > table.leftTopCorner.getX()
+                        && event.getX() < table.leftTopCorner.getX() + table.TABLE_WIDTH)
+                    if(event.getY() > table.leftTopCorner.getY()
+                            && event.getY() < table.leftTopCorner.getY() + table.TABLE_HEIGHT)
                 startMove(event.getX(), event.getY());
             }
         });
